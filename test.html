@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试</title>
+</head>
+<body>
+  <h1>API 测试</h1>
+  <button onclick="test1()">测试 1: 检查 chrome 对象</button>
+  <button onclick="test2()">测试 2: chrome.tabs</button>
+  <button onclick="test3()">测试 3: 打开百度</button>
+  <pre id="log"></pre>
+
+  <script>
+    function log(msg) {
+      document.getElementById('log').textContent += new Date().toLocaleTimeString() + ': ' + msg + '\n';
+    }
+
+    function test1() {
+      log('=== 测试 1: 检查 chrome 对象 ===');
+      log('typeof chrome: ' + typeof chrome);
+      log('chrome 存在: ' + (typeof chrome !== 'undefined'));
+      if (typeof chrome !== 'undefined') {
+        log('chrome.tabs 存在: ' + (typeof chrome.tabs !== 'undefined'));
+        log('chrome.runtime 存在: ' + (typeof chrome.runtime !== 'undefined'));
+      }
+    }
+
+    function test2() {
+      log('=== 测试 2: chrome.tabs.query ===');
+      if (typeof chrome !== 'undefined' && chrome.tabs) {
+        chrome.tabs.query({}, (tabs) => {
+          log('找到 ' + tabs.length + ' 个标签页');
+        }).catch(err => {
+          log('失败: ' + err.message);
+        });
+      } else {
+        log('chrome.tabs 不可用');
+      }
+    }
+
+    async function test3() {
+      log('=== 测试 3: chrome.tabs.create ===');
+      if (typeof chrome !== 'undefined' && chrome.tabs) {
+        try {
+          const tab = await chrome.tabs.create({ url: 'https://www.baidu.com' });
+          log('成功! 标签 ID: ' + tab.id);
+        } catch (err) {
+          log('失败: ' + err.message);
+        }
+      } else {
+        log('chrome.tabs 不可用');
+      }
+    }
+
+    log('页面加载完成\n');
+  </script>
+</body>
+</html>

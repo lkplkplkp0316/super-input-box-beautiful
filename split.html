@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 多屏问答</title>
+  <link rel="stylesheet" href="split.css">
+</head>
+<body>
+  <!-- 顶部控制栏 -->
+  <header class="header" id="mainHeader">
+    <button class="collapse-btn" id="collapseBtn" title="收起/展开">
+      <span class="collapse-icon">▼</span>
+    </button>
+    <div class="header-title">
+      <span class="title-icon">◈</span>
+      <span class="title-text">AI 多屏问答</span>
+    </div>
+    <div class="ai-selector">
+      <button class="ai-card" data-ai="chatgpt" title="ChatGPT">
+        <div class="ai-icon">💬</div>
+        <div class="ai-name">ChatGPT</div>
+        <div class="ai-indicator"></div>
+      </button>
+      <button class="ai-card" data-ai="gemini" title="Gemini">
+        <div class="ai-icon">✦</div>
+        <div class="ai-name">Gemini</div>
+        <div class="ai-indicator"></div>
+      </button>
+      <button class="ai-card" data-ai="kimi" title="Kimi">
+        <div class="ai-icon">☽</div>
+        <div class="ai-name">Kimi</div>
+        <div class="ai-indicator"></div>
+      </button>
+      <button class="ai-card" data-ai="claude" title="Claude">
+        <div class="ai-icon">◐</div>
+        <div class="ai-name">Claude</div>
+        <div class="ai-indicator"></div>
+      </button>
+    </div>
+    <button class="clear-btn" title="清空所有">
+      <span>✕</span>
+      <span>清空</span>
+    </button>
+  </header>
+
+  <!-- 分屏容器 -->
+  <main class="split-container" id="splitContainer">
+    <div class="empty-state">
+      <div class="empty-animation">
+        <div class="floating-icon">⬡</div>
+        <div class="ripple-ring"></div>
+        <div class="ripple-ring ripple-2"></div>
+      </div>
+      <h2 class="empty-title">选择 AI 开始对话</h2>
+      <p class="empty-desc">点击上方 AI 卡片添加到分屏</p>
+      <div class="empty-hint">支持同时对比多个 AI 的回答</div>
+    </div>
+  </main>
+
+  <!-- 底部输入栏 -->
+  <footer class="input-bar" id="inputBar" style="display: none;">
+    <div class="input-wrapper">
+      <div class="input-glow"></div>
+      <textarea
+        class="main-input"
+        id="mainInput"
+        placeholder="输入问题，发送到所有已选 AI..."
+        rows="1"
+      ></textarea>
+      <div class="input-actions">
+        <button class="send-btn" id="sendBtn" title="发送 (Enter)">
+          <span class="send-icon">➤</span>
+        </button>
+      </div>
+    </div>
+    <div class="input-status" id="inputStatus">
+      <span class="status-dot"></span>
+      <span class="status-text">就绪</span>
+    </div>
+  </footer>
+
+  <script src="split.js"></script>
+</body>
+</html>

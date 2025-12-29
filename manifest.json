@@ -1,0 +1,73 @@
+{
+  "manifest_version": 3,
+  "name": "超级输入框 - 多AI同步助手",
+  "version": "1.0.2",
+  "description": "同时向多个AI网站发送问题，支持分屏浏览和统一输入",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src *"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://gemini.google.com/*",
+    "https://accounts.google.com/*",
+    "https://kimi.moonshot.cn/*",
+    "https://moonshot.cn/*",
+    "https://claude.ai/*",
+    "https://chat.deepseek.com/*",
+    "https://deepseek.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "test.html",
+  "action": {
+    "default_popup": "sidepanel.html",
+    "default_icon": {
+      "16": "icon_HIGH.png",
+      "48": "icon_HIGH.png",
+      "128": "icon_HIGH.png"
+    },
+    "default_title": "打开超级输入框"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "https://chatgpt.com/*",
+      "https://chat.openai.com/*",
+      "https://gemini.google.com/*",
+      "https://kimi.moonshot.cn/*",
+      "https://claude.ai/*",
+      "https://chat.deepseek.com/*",
+      "https://deepseek.com/*"
+    ]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["iframe-inject.js"],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://gemini.google.com/*",
+        "https://kimi.moonshot.cn/*",
+        "https://claude.ai/*",
+        "https://chat.deepseek.com/*",
+        "https://deepseek.com/*"
+      ]
+    }
+  ]
+}

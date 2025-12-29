@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>超级输入框</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 超级输入框</h1>
+      <p class="subtitle">同时向多个AI发送问题</p>
+    </div>
+
+    <!-- 快速打开按钮 -->
+    <div class="quick-actions">
+      <button class="quick-btn chatgpt" id="btnChatGPT">
+        <span class="icon">💬</span>
+        <span>ChatGPT</span>
+      </button>
+      <button class="quick-btn gemini" id="btnGemini">
+        <span class="icon">✨</span>
+        <span>Gemini</span>
+      </button>
+    </div>
+
+    <!-- 分屏按钮 -->
+    <div class="split-section">
+      <button class="split-btn" id="btnOpenSplit">
+        <span class="icon">🖥️</span>
+        <span>打开分屏</span>
+      </button>
+    </div>
+
+    <!-- 悬浮输入框开关 -->
+    <div class="float-toggle">
+      <label class="switch">
+        <input type="checkbox" id="floatInputToggle">
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">显示悬浮输入框</span>
+    </div>
+
+    <!-- 活跃标签列表 -->
+    <div class="tabs-section">
+      <div class="section-header">
+        <h2>活跃标签</h2>
+        <button class="refresh-btn" id="btnRefresh" title="刷新">
+          🔄
+        </button>
+      </div>
+      <div class="tabs-list" id="tabsList">
+        <div class="empty-state">
+          <p>暂无活跃标签</p>
+          <p class="hint">打开 AI 网站后会自动添加</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 统一输入框 -->
+    <div class="input-section">
+      <h2>统一输入</h2>
+      <div class="input-wrapper">
+        <textarea
+          id="messageInput"
+          placeholder="在这里输入问题，点击发送后所有活跃标签都会收到..."
+          rows="4"
+        ></textarea>
+        <div class="input-footer">
+          <span class="char-count" id="charCount">0 字符</span>
+          <button class="send-btn" id="btnSend">
+            <span>发送到全部</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 发送状态 -->
+    <div class="status-section" id="statusSection" style="display: none;">
+      <div class="status-header">
+        <span>发送状态</span>
+        <button class="close-status" id="btnCloseStatus">✕</button>
+      </div>
+      <div class="status-list" id="statusList"></div>
+    </div>
+
+    <!-- 测试按钮 -->
+    <div class="test-section">
+      <h2>测试</h2>
+      <button class="test-btn" id="btnTest">测试打开百度</button>
+      <div id="testLog"></div>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

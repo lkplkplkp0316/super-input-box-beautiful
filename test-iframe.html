@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 网站嵌入测试</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fc;
+      padding: 20px;
+    }
+    h1 { color: #1a1a2e; margin-bottom: 20px; }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+    }
+    .test-item {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .test-header {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+    }
+    .test-status {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid #eee;
+    }
+    .status-working { background: #d4edda; color: #155724; }
+    .status-failed { background: #f8d7da; color: #721c24; }
+    .test-iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI 网站嵌入测试</h1>
+  <p style="margin-bottom: 20px; color: #666;">测试各个 AI 网站是否可以在 iframe 中正常加载</p>
+
+  <div class="test-grid">
+    <div class="test-item">
+      <div class="test-header">ChatGPT</div>
+      <div class="test-status" id="status-chatgpt">测试中...</div>
+      <iframe src="https://chatgpt.com" class="test-iframe"></iframe>
+    </div>
+
+    <div class="test-item">
+      <div class="test-header">Claude</div>
+      <div class="test-status" id="status-claude">测试中...</div>
+      <iframe src="https://claude.ai" class="test-iframe"></iframe>
+    </div>
+
+    <div class="test-item">
+      <div class="test-header">Kimi</div>
+      <div class="test-status" id="status-kimi">测试中...</div>
+      <iframe src="https://kimi.moonshot.cn" class="test-iframe"></iframe>
+    </div>
+
+    <div class="test-item">
+      <div class="test-header">Gemini</div>
+      <div class="test-status" id="status-gemini">测试中...</div>
+      <iframe src="https://gemini.google.com" class="test-iframe"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // 检测 iframe 加载状态
+    document.querySelectorAll('iframe').forEach(iframe => {
+      iframe.onload = function() {
+        const siteName = iframe.src.match(/\/\/([^\/]+)/)[1];
+        const statusEl = document.getElementById('status-' + siteName.replace(/\./g, '-').replace('chatgpt.com', 'chatgpt').replace('kimi.moonshot.cn', 'kimi'));
+        if (statusEl) {
+          statusEl.textContent = '✓ 加载成功';
+          statusEl.className = 'test-status status-working';
+        }
+      };
+
+      iframe.onerror = function() {
+        const siteName = iframe.src.match(/\/\/([^\/]+)/)[1];
+        const statusEl = document.getElementById('status-' + siteName);
+        if (statusEl) {
+          statusEl.textContent = '✗ 加载失败';
+          statusEl.className = 'test-status status-failed';
+        }
+      };
+    });
+
+    // 3秒后检查未完成的
+    setTimeout(() => {
+      document.querySelectorAll('.test-status').forEach(status => {
+        if (status.textContent === '测试中...') {
+          status.textContent = '✗ 无法连接（可能被 CSP 阻止）';
+          status.className = 'test-status status-failed';
+        }
+      });
+    }, 3000);
+  </script>
+</body>
+</html>

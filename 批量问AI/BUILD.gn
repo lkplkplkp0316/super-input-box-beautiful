@@ -1,0 +1,41 @@
+import("//tools/grit/grit_rule.gni")
+import("//ui/webui/resources/tools/generate_grd.gni")
+generated_grd = "$target_gen_dir/resources.grd"
+
+generate_grd("build_grd") {
+  out_grd = generated_grd
+  resource_path_prefix = "ai_split_screen"
+  grd_prefix = "ai_split_screen"
+  input_files_base_dir = rebase_path(".", "//")
+  input_files = [
+  "app.js",
+  "assets/app.D394DvfY.css",
+  "assets/background.l0sNRNKZ.js",
+  "assets/search-logo.DjLyPdPi.png",
+  "background.js",
+  "content.js",
+  "images/128.png",
+  "images/16.png",
+  "images/24.png",
+  "images/256.png",
+  "images/48.png",
+  "images/64.png",
+  "images/dark.png",
+  "images/light.png",
+  "index.html",
+  "manifest.json"
+]
+}
+grit("resources") {
+  source = generated_grd
+  enable_input_discovery_for_gn_analyze = false
+  deps = [ ":build_grd" ]
+
+  outputs = [
+    "grit/ai_split_screen_resources.h",
+    "grit/ai_split_screen_resources_map.cc",
+    "grit/ai_split_screen_resources_map.h",
+    "ai_split_screen_resources.pak",
+  ]
+  output_dir = "$root_gen_dir/ucbrowser/uc_bussiness/resources/uc_extension/ai_split_screen"
+}
