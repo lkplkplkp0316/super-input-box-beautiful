@@ -171,9 +171,8 @@ function renderSplits() {
   else if (activeSplits.length === 3) container.classList.add('three');
   else if (activeSplits.length === 4) container.classList.add('four');
 
-  // 渲染分屏项
+  // 渲染分屏项 - 使用 AI 的 id 作为稳定的标识符
   container.innerHTML = activeSplits.map((ai, index) => {
-    const instanceId = `${ai.id}-${Date.now()}-${index}`;
     return `
     <div class="split-item" style="animation-delay: ${index * 0.1}s">
       <div class="split-item-header">
@@ -187,7 +186,7 @@ function renderSplits() {
       </div>
       <div class="split-item-content">
         <iframe
-          data-instance-id="${instanceId}"
+          data-ai-id="${ai.id}"
           src="${ai.url}"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -197,14 +196,6 @@ function renderSplits() {
     </div>
   `;
   }).join('');
-
-  // 保存 instanceId 到 activeSplits
-  activeSplits.forEach((ai, index) => {
-    const iframe = container.querySelectorAll('iframe')[index];
-    if (iframe) {
-      ai.instanceId = iframe.dataset.instanceId;
-    }
-  });
 
   // 绑定移除按钮
   container.querySelectorAll('.split-btn.remove').forEach(btn => {
@@ -235,7 +226,7 @@ function sendMessage() {
 
   // 发送到每个分屏
   activeSplits.forEach(ai => {
-    const iframe = document.querySelector(`iframe[src="${ai.url}"]`);
+    const iframe = document.querySelector(`iframe[data-ai-id="${ai.id}"]`);
     if (iframe && iframe.contentWindow) {
       try {
         iframe.contentWindow.postMessage({
@@ -393,25 +384,22 @@ function startNewChat() {
     return;
   }
 
-  console.log('=== 发起新对话 ===', activeSplits);
+  console.log('=== 发起新对话 ===');
   updateStatus('正在新建对话...', 'processing');
 
   let successCount = 0;
 
-  activeSplits.forEach((split) => {
-    // split 直接就是 AI 配置对象，有 url 和 id 属性
-    console.log('=== 处理 split:', split);
-
-    // 通过重新加载 iframe URL 来发起新对话
-    const iframe = document.querySelector(`iframe[data-instance-id="${split.instanceId}"]`);
+  activeSplits.forEach((ai) => {
+    // 使用 data-ai-id 查找 iframe
+    const iframe = document.querySelector(`iframe[data-ai-id="${ai.id}"]`);
     if (iframe) {
       // 添加时间戳强制刷新
       const timestamp = Date.now();
-      iframe.src = split.url + '?t=' + timestamp;
-      console.log('=== 刷新 iframe:', split.id, split.url);
+      iframe.src = ai.url + '?t=' + timestamp;
+      console.log('=== 刷新 iframe:', ai.id, ai.url);
       successCount++;
     } else {
-      console.log('=== 未找到 iframe:', split.instanceId);
+      console.log('=== 未找到 iframe:', ai.id);
     }
   });
 
