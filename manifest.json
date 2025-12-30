@@ -28,7 +28,6 @@
   },
   "options_page": "test.html",
   "action": {
-    "default_popup": "sidepanel.html",
     "default_icon": {
       "16": "icon_HIGH.png",
       "48": "icon_HIGH.png",

@@ -145,6 +145,29 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
+// 点击插件图标时 - 打开分屏页面
+chrome.action.onClicked.addListener(async (tab) => {
+  console.log('=== 点击插件图标 ===');
+
+  // 获取 split.html 的 URL
+  const splitUrl = chrome.runtime.getURL('split.html');
+
+  // 检查是否已经打开分屏页面
+  const tabs = await chrome.tabs.query({});
+  const existingTab = tabs.find(t => t.url && t.url.includes('split.html'));
+
+  if (existingTab) {
+    // 如果已打开，切换到该标签页
+    await chrome.tabs.update(existingTab.id, { active: true });
+    await chrome.windows.update(existingTab.windowId, { focused: true });
+  } else {
+    // 否则打开新的分屏页面
+    await chrome.tabs.create({
+      url: splitUrl
+    });
+  }
+});
+
 // 接收来自 popup 和内容脚本的消息
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('=== Background 收到消息:', request.action, JSON.stringify(request));
