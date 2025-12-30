@@ -70,6 +70,9 @@ function bindEvents() {
   // 发送按钮
   document.getElementById('sendBtn').addEventListener('click', sendMessage);
 
+  // 新对话按钮
+  document.getElementById('newChatBtn').addEventListener('click', startNewChat);
+
   // 输入框回车发送
   const mainInput = document.getElementById('mainInput');
   mainInput.addEventListener('keydown', (e) => {
@@ -370,3 +373,46 @@ window.addEventListener('message', (event) => {
     console.log('=== iframe 已加载:', event.data.data.instanceId);
   }
 });
+
+// 发起新对话
+function startNewChat() {
+  if (activeSplits.length === 0) {
+    showNotification('请先选择 AI', 'warning');
+    return;
+  }
+
+  console.log('=== 发起新对话 ===');
+  updateStatus('正在新建对话...', 'processing');
+
+  let successCount = 0;
+  let failCount = 0;
+
+  activeSplits.forEach((split, index) => {
+    const aiConfig = AI_SITES[split.aiId];
+    if (!aiConfig) return;
+
+    // 向 iframe 发起新对话消息
+    const iframe = document.querySelector(`iframe[data-instance-id="${split.instanceId}"]`);
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({
+        type: 'NEW_CHAT',
+        data: {
+          aiId: split.aiId,
+          selector: aiConfig.selector
+        }
+      }, '*');
+
+      successCount++;
+    } else {
+      failCount++;
+    }
+  });
+
+  if (successCount > 0) {
+    showNotification(`已发起 ${successCount} 个新对话`, 'success');
+    updateStatus('就绪', 'ready');
+  } else {
+    showNotification('新对话发起失败', 'error');
+    updateStatus('失败', 'error');
+  }
+}

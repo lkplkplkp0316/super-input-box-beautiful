@@ -232,3 +232,58 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   return true;
 });
+
+// 监听来自父窗口的消息（用于新对话功能）
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'NEW_CHAT') {
+    console.log('=== 收到新对话请求:', event.data);
+    handleNewChat();
+  }
+});
+
+// 处理新对话 - 通过导航到根 URL 或点击新对话按钮
+function handleNewChat() {
+  const site = detectSite();
+  console.log('=== 当前网站:', site);
+
+  // 不同网站的新对话策略
+  const newChatActions = {
+    chatgpt: () => {
+      // ChatGPT: 点击新对话按钮或刷新页面
+      const newChatBtn = document.querySelector('button[aria-label*="New chat"], button[title*="新建"], a[href*="/new"]');
+      if (newChatBtn) {
+        newChatBtn.click();
+        console.log('=== ChatGPT: 点击新对话按钮');
+      } else {
+        // 备用方案：导航到根路径
+        window.location.href = 'https://chatgpt.com';
+      }
+    },
+    gemini: () => {
+      // Gemini: 刷新页面
+      window.location.reload();
+    },
+    kimi: () => {
+      // Kimi: 导航到首页
+      window.location.href = 'https://kimi.moonshot.cn';
+    },
+    claude: () => {
+      // Claude: 点击新对话按钮
+      const newChatBtn = document.querySelector('button[aria-label*="New"], button[title*="新建"], a[href*="/new"]');
+      if (newChatBtn) {
+        newChatBtn.click();
+        console.log('=== Claude: 点击新对话按钮');
+      } else {
+        window.location.href = 'https://claude.ai';
+      }
+    }
+  };
+
+  const action = newChatActions[site];
+  if (action) {
+    action();
+  } else {
+    console.log('=== 未知网站，尝试刷新页面');
+    window.location.reload();
+  }
+}
