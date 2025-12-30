@@ -393,23 +393,25 @@ function startNewChat() {
     return;
   }
 
-  console.log('=== 发起新对话 ===');
+  console.log('=== 发起新对话 ===', activeSplits);
   updateStatus('正在新建对话...', 'processing');
 
   let successCount = 0;
 
   activeSplits.forEach((split) => {
-    const aiConfig = AI_SITES[split.aiId];
-    if (!aiConfig) return;
+    // split 直接就是 AI 配置对象，有 url 和 id 属性
+    console.log('=== 处理 split:', split);
 
     // 通过重新加载 iframe URL 来发起新对话
     const iframe = document.querySelector(`iframe[data-instance-id="${split.instanceId}"]`);
     if (iframe) {
       // 添加时间戳强制刷新
       const timestamp = Date.now();
-      iframe.src = aiConfig.url + '?t=' + timestamp;
-      console.log('=== 刷新 iframe:', split.aiId, aiConfig.url);
+      iframe.src = split.url + '?t=' + timestamp;
+      console.log('=== 刷新 iframe:', split.id, split.url);
       successCount++;
+    } else {
+      console.log('=== 未找到 iframe:', split.instanceId);
     }
   });
 
