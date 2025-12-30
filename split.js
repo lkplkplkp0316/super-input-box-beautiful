@@ -385,26 +385,19 @@ function startNewChat() {
   updateStatus('正在新建对话...', 'processing');
 
   let successCount = 0;
-  let failCount = 0;
 
-  activeSplits.forEach((split, index) => {
+  activeSplits.forEach((split) => {
     const aiConfig = AI_SITES[split.aiId];
     if (!aiConfig) return;
 
-    // 向 iframe 发起新对话消息
+    // 通过重新加载 iframe URL 来发起新对话
     const iframe = document.querySelector(`iframe[data-instance-id="${split.instanceId}"]`);
-    if (iframe && iframe.contentWindow) {
-      iframe.contentWindow.postMessage({
-        type: 'NEW_CHAT',
-        data: {
-          aiId: split.aiId,
-          selector: aiConfig.selector
-        }
-      }, '*');
-
+    if (iframe) {
+      // 添加时间戳强制刷新
+      const timestamp = Date.now();
+      iframe.src = aiConfig.url + '?t=' + timestamp;
+      console.log('=== 刷新 iframe:', split.aiId, aiConfig.url);
       successCount++;
-    } else {
-      failCount++;
     }
   });
 
