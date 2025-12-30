@@ -172,7 +172,9 @@ function renderSplits() {
   else if (activeSplits.length === 4) container.classList.add('four');
 
   // 渲染分屏项
-  container.innerHTML = activeSplits.map((ai, index) => `
+  container.innerHTML = activeSplits.map((ai, index) => {
+    const instanceId = `${ai.id}-${Date.now()}-${index}`;
+    return `
     <div class="split-item" style="animation-delay: ${index * 0.1}s">
       <div class="split-item-header">
         <div class="split-info">
@@ -185,6 +187,7 @@ function renderSplits() {
       </div>
       <div class="split-item-content">
         <iframe
+          data-instance-id="${instanceId}"
           src="${ai.url}"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -192,7 +195,16 @@ function renderSplits() {
         ></iframe>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
+
+  // 保存 instanceId 到 activeSplits
+  activeSplits.forEach((ai, index) => {
+    const iframe = container.querySelectorAll('iframe')[index];
+    if (iframe) {
+      ai.instanceId = iframe.dataset.instanceId;
+    }
+  });
 
   // 绑定移除按钮
   container.querySelectorAll('.split-btn.remove').forEach(btn => {
